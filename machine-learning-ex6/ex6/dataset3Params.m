@@ -23,12 +23,24 @@ sigma = 0.3;
 %        mean(double(predictions ~= yval))
 %
 
+C_vars = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30];
+sigma_vars = [0.01, 0.03, 0.1, 0.3, 1, 3, 10, 30];
 
+[p,q] = meshgrid(C_vars,sigma_vars);
+settings = [p(:) q(:)];
+predictions_error = zeros(size(settings,1),1);
 
+for i = 1:size(settings,1)
+    c = settings(i,1);
+    sigma = settings(i,2);
+    model = svmTrain(X, y, c, @(x1, x2) gaussianKernel(x1, x2, sigma));
+    prediction = svmPredict(model, Xval);
+    predictions_error(i) = mean(double(prediction ~= yval));
+end
 
+[~, i] = min(predictions_error);
 
-
-
-% =========================================================================
-
+t = settings(i,:);
+C = t(1);
+sigma = t(2);
 end
