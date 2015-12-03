@@ -13,7 +13,10 @@ centroids = zeros(K, size(X, 2));
 %               the dataset X
 %
 
-
+for k = 1:K
+    r = randi([1, size(X,1)]);
+    centroids(k,:) = X(r,:);
+end
 
 
 
